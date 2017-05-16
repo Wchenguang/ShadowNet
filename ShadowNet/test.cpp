@@ -23,17 +23,24 @@ int main()
 		1,
 		1,
 		0;
-	MultiBPNet n;
-	n.Init(2, 2, 1, new int[2]{ 3,4 },0.77);
-	n.SetNet(&input, &output);
-	//n.Train(1400);
-	n.TrainWithError(0.0001);
+	//Sigmodfunction 多层BP神经网络
+	/*MultiBPNet<SigmodFunction> SN;
+	SN.Init(2, 2, 1, new int[2]{ 3,4 },0.77);
+	SN.SetNet(&input, &output);
+	SN.TrainWithError(0.0001);
+	SN.Test();
 
-	n.Test();
-	//cout << output(0, 0);
+	SN.Destroy();*/
 
-	
-		
+	//getchar();
+
+	//Prelufunction 多层BP神经网络
+	MultiBPNet<PreluFunction> PN;
+	PN.Init(2, 2, 1, new int[2]{ 3,4 }, 0.07);
+	PN.SetNet(&input, &output);
+	//PN.Skip(100);
+	PN.TrainWithError(0.000001);
+	PN.Test();
 
 	getchar();
 

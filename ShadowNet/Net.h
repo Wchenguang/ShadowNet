@@ -7,17 +7,18 @@
 
 using namespace Eigen;
 
+template <class FunctionType>
 class MultiBPNet
 {
 private:
 	int HidenLayerNum;
 	int HidenConnectorNum;
 	FullConectedLayher<LinerFunction> BPInputLayer;
-	OutputLayer<SigmodFunction> BPOutputLayer;
-	FullConectedLayher<SigmodFunction> *BPHidenLayers;
-	Connector<FullConectedLayher<LinerFunction>, FullConectedLayher<SigmodFunction>> IConnector;
-	Connector<FullConectedLayher<SigmodFunction>, OutputLayer<SigmodFunction>> OConnector;
-	Connector<FullConectedLayher<SigmodFunction>, FullConectedLayher<SigmodFunction>> *HConnectors;
+	OutputLayer<FunctionType> BPOutputLayer;
+	FullConectedLayher<FunctionType> *BPHidenLayers;
+	Connector<FullConectedLayher<LinerFunction>, FullConectedLayher<FunctionType>> IConnector;
+	Connector<FullConectedLayher<FunctionType>, OutputLayer<FunctionType>> OConnector;
+	Connector<FullConectedLayher<FunctionType>, FullConectedLayher<FunctionType>> *HConnectors;
 
 	MatrixXd Inputarrs;
 	MatrixXd Expextarrs;
@@ -31,7 +32,7 @@ public:
 	void Init(int hidenlayernum, int inputlayernuetronnum, int outputlayerneutronnum, int *hidenlayersnuutronnums, double learningrate = 0.9, double thresold = 0) 
 	{ 
 		HidenLayerNum = hidenlayernum;
-		BPHidenLayers = new FullConectedLayher<SigmodFunction>[hidenlayernum];
+		BPHidenLayers = new FullConectedLayher<FunctionType>[hidenlayernum];
 		BPInputLayer.Init(inputlayernuetronnum, thresold);
 		BPOutputLayer.Init(outputlayerneutronnum, thresold);
 		for (int i = 0; i < hidenlayernum; ++i)
@@ -41,7 +42,7 @@ public:
 		OConnector.Init(&BPHidenLayers[hidenlayernum - 1], &BPOutputLayer, learningrate);
 
 		HidenConnectorNum = hidenlayernum - 1;
-		HConnectors = new Connector<FullConectedLayher<SigmodFunction>, FullConectedLayher<SigmodFunction>>[HidenConnectorNum];
+		HConnectors = new Connector<FullConectedLayher<FunctionType>, FullConectedLayher<FunctionType>>[HidenConnectorNum];
 
 		for (int i = 0; i < HidenConnectorNum; ++i)
 			HConnectors[i].Init(&BPHidenLayers[i], &BPHidenLayers[i + 1], learningrate);
@@ -90,10 +91,17 @@ public:
 		return 0.5 * error;
 	}
 
+	void Skip(int skiptimes)
+	{
+		for (int i = 0; i < skiptimes; ++i)
+			_Train();
+	}
+
 	void Train(int traintimes)
 	{
 		for (int i = 0; i < traintimes; ++i)
 			_Train();
+		cout << GetError() << endl;
 	}
 
 	void TrainWithError(double error)
@@ -104,7 +112,6 @@ public:
 			++n;
 			_Train();
 			cout << GetError() << endl;
-			//getchar();
 		} while (error < GetError());
 		cout << n << endl;
 	}
@@ -124,5 +131,10 @@ public:
 				cout << BPOutputLayer.Neutrons[i].GetOutput()<<':'<<BPOutputLayer.Neutrons[i].Expect << " ";
 			cout << endl;
 		}
+	}
+
+	void Destroy()
+	{
+		this->~MultiBPNet();
 	}
 };
