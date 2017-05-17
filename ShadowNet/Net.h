@@ -135,6 +135,7 @@ public:
 
 	void Destroy()
 	{
-		this->~MultiBPNet();
+		if (BPHidenLayers) { delete[] BPHidenLayers; BPHidenLayers = NULL; }
+		if (HConnectors) { delete[] HConnectors; HConnectors = NULL; }
 	}
 };

@@ -24,16 +24,14 @@ int main()
 		1,
 		0;
 	//Sigmodfunction 多层BP神经网络
-	/*MultiBPNet<SigmodFunction> SN;
-	SN.Init(2, 2, 1, new int[2]{ 3,4 },0.77);
-	SN.SetNet(&input, &output);
-	SN.TrainWithError(0.0001);
-	SN.Test();
+	MultiBPNet<SigmodFunction> *SN = new MultiBPNet<SigmodFunction>;
+	SN->Init(2, 2, 1, new int[2]{ 3,4 },0.77);
+	SN->SetNet(&input, &output);
+	SN->TrainWithError(0.0001);
+	SN->Test();
 
-	SN.Destroy();*/
-
-	//getchar();
-
+	delete SN;
+	getchar();
 	//Prelufunction 多层BP神经网络
 	MultiBPNet<PreluFunction> PN;
 	PN.Init(2, 2, 1, new int[2]{ 3,4 }, 0.07);

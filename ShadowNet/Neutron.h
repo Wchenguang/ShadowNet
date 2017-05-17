@@ -19,14 +19,13 @@ public:
 	double *RecievedFactor;			//从下一层接收的反向传播因子 connector
 	double **NextThresold;			//下一层的阈值指针 connector
 	int NextLayerNeutronNum;
-	//int LastLayerNeutronNum;
-	//double *LastWeight;	//上一层所有指向它的权值
-	double *NextWeight;	//下一层它指向的所有权值
+	double *NextWeight;				//下一层它指向的所有权值
+	bool isInputSet;
 
 
 
 	FullConectedNeutron() : LearningRate(0.01), RecievedFactor(0), NextLayerNeutronNum(0),
-		NextWeight(0), NextThresold(0) {}
+		NextWeight(0), NextThresold(0), isInputSet(false) {}
 	~FullConectedNeutron() { if (NextWeight) delete [] NextWeight; }
 	void InitThresold(double thresold) { Thresold = thresold; }
 	void _Init(double learningrate, double *recievedfactor,	
@@ -48,8 +47,9 @@ public:
 	typedef FunctionType functiontype;
 
 	double Expect;
+	bool isInputSet;
 
-	OutputNeutron() : Expect(0) {}
+	OutputNeutron() : Expect(0), isInputSet(false) {}
 	~OutputNeutron() {}
 	void InitThresold(double thresold) { Thresold = thresold; }
 	void InitExpect(double expect) { Expect = expect; }
@@ -70,6 +70,7 @@ template <class FunctionType>
 void FullConectedNeutron<FunctionType>::_Init(double learningrate, double *recievedfactor,
 	double **nextthresold, int nextlayerneutronnum)
 {
+	isInputSet = false;
 	LearningRate = learningrate;
 	RecievedFactor = recievedfactor;
 	NextThresold = nextthresold;
@@ -102,7 +103,11 @@ void FullConectedNeutron<FunctionType>::Update()
 template <class FunctionType>
 double FullConectedNeutron<FunctionType>::GetOutput()
 {
-	Output = Function.GetOutput(Input - Thresold);
+	if (isInputSet)
+	{
+		Output = Function.GetOutput(Input - Thresold);
+		isInputSet = false;
+	}
 	return Output;
 }
 
@@ -110,6 +115,7 @@ template <class FunctionType>
 void FullConectedNeutron<FunctionType>::SetInput(double input)
 {
 	Input = input;
+	isInputSet = true;
 }
 
 template <class FunctionType>
@@ -136,7 +142,11 @@ double *OutputNeutron<functiontype>::GetPThresold()
 template <class functiontype>
 double OutputNeutron<functiontype>::GetOutput()
 {
-	Output = Function.GetOutput(Input - Thresold);
+	if (isInputSet)
+	{
+		Output = Function.GetOutput(Input - Thresold);
+		isInputSet = false;
+	}
 	return Output;
 }
 
@@ -144,4 +154,5 @@ template <class functiontype>
 void OutputNeutron<functiontype>::SetInput(double input)
 {
 	Input = input;
+	isInputSet = true;
 }

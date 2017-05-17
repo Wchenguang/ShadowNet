@@ -123,9 +123,7 @@ public:
 			double temp = 0;
 			for (int j = 0; j < LastLayer->NeutronsNum; ++j)
 			{
-				double t = LastLayer->Neutrons[j].GetOutput();
-				double tt = LastLayer->Neutrons[j].NextWeight[i];
-				temp += tt * t;
+				temp += LastLayer->Neutrons[j].GetOutput() * LastLayer->Neutrons[j].NextWeight[i];
 			}
 			NextLayer->Neutrons[i].SetInput(temp);
 			NextLayer->Neutrons[i].GetOutput();
@@ -169,9 +167,7 @@ public:
 			double temp = 0;
 			for (int j = 0; j < LastLayer->NeutronsNum; ++j)
 			{
-				double t = LastLayer->Neutrons[j].GetOutput();
-				double tt = LastLayer->Neutrons[j].NextWeight[i];
-				temp += tt * t;
+				temp += LastLayer->Neutrons[j].GetOutput() * LastLayer->Neutrons[j].NextWeight[i];
 			}
 			NextLayer->Neutrons[i].SetInput(temp);
 			NextLayer->Neutrons[i].GetOutput();
@@ -216,9 +212,7 @@ public:
 			double temp = 0;
 			for (int j = 0; j < LastLayer->NeutronsNum; ++j)
 			{
-				double t = LastLayer->Neutrons[j].GetOutput();
-				double tt = LastLayer->Neutrons[j].NextWeight[i];
-				temp += tt * t;
+				temp += LastLayer->Neutrons[j].GetOutput() * LastLayer->Neutrons[j].NextWeight[i];
 			}
 			NextLayer->Neutrons[i].SetInput(temp);
 		}
@@ -261,9 +255,7 @@ public:
 			double temp = 0;
 			for (int j = 0; j < LastLayer->NeutronsNum; ++j)
 			{
-				double t = LastLayer->Neutrons[j].GetOutput();
-				double tt = LastLayer->Neutrons[j].NextWeight[i];
-				temp += tt * t;
+				temp += LastLayer->Neutrons[j].GetOutput() * LastLayer->Neutrons[j].NextWeight[i];
 			}
 			NextLayer->Neutrons[i].SetInput(temp);
 		}

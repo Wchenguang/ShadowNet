@@ -7,9 +7,10 @@ class obj
 template <class InputType, class OutputType>
 class Neutron : public obj
 {
-public:
+protected:
 	InputType	Input;
 	OutputType	Output;
+public:
 	InputType	Thresold;
 
 	Neutron() : Input(0), Output(0), Thresold(0) {}
