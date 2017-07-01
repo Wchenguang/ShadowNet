@@ -5,18 +5,21 @@
 
 using namespace Eigen;
 
+//所有层的父类
 template <class NeutronType>
 class Layer
 {};
 
+//全连接层 也可以作为输入
 template <class FunctionType>
 class FullConectedLayher : public Layer<FullConectedNeutron<FunctionType>>
 {
 public:
-	FullConectedNeutron<FunctionType> *Neutrons;
-	int NeutronsNum;
+	FullConectedNeutron<FunctionType> *Neutrons;	//神经元指针
+	int NeutronsNum;								//神经元个数
 
 	FullConectedLayher() : Neutrons(0), NeutronsNum(0) {}
+	//个数与阈值
 	void Init(int nuetronsnum, double thresold = 0)
 	{
 		NeutronsNum = nuetronsnum;
@@ -44,6 +47,7 @@ public:
 	~FullConectedLayher() { if (Neutrons) delete [] Neutrons; }
 };
 
+//输出层
 template <class FunctionType>
 //typedef int FunctionType;
 class OutputLayer : public Layer<OutputNeutron<FunctionType>>
