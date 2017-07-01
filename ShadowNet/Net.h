@@ -11,17 +11,17 @@ template <class FunctionType>
 class MultiBPNet
 {
 private:
-	int HidenLayerNum;
-	int HidenConnectorNum;
-	FullConectedLayher<LinerFunction> BPInputLayer;
-	OutputLayer<FunctionType> BPOutputLayer;
-	FullConectedLayher<FunctionType> *BPHidenLayers;
-	Connector<FullConectedLayher<LinerFunction>, FullConectedLayher<FunctionType>> IConnector;
-	Connector<FullConectedLayher<FunctionType>, OutputLayer<FunctionType>> OConnector;
-	Connector<FullConectedLayher<FunctionType>, FullConectedLayher<FunctionType>> *HConnectors;
+	int HidenLayerNum;											//隐藏层个数
+	int HidenConnectorNum;											//链接隐藏层的Connector个数 即层数-1
+	FullConectedLayher<LinerFunction> BPInputLayer;								//输入层
+	OutputLayer<FunctionType> BPOutputLayer;								//输出层
+	FullConectedLayher<FunctionType> *BPHidenLayers;							//隐藏层指针											
+	Connector<FullConectedLayher<LinerFunction>, FullConectedLayher<FunctionType>> IConnector;		//输入与全连接层 Connector
+	Connector<FullConectedLayher<FunctionType>, OutputLayer<FunctionType>> OConnector;			//全连接与输出Connector
+	Connector<FullConectedLayher<FunctionType>, FullConectedLayher<FunctionType>> *HConnectors;		//全连接层之间Connector指针
 
-	MatrixXd Inputarrs;
-	MatrixXd Expextarrs;
+	MatrixXd Inputarrs;											//输入向量
+	MatrixXd Expextarrs;											//预期向量
 public:
 	MultiBPNet() : HidenLayerNum(0), HidenConnectorNum(0), BPHidenLayers(0), HConnectors(0) {}
 	~MultiBPNet()
@@ -49,19 +49,20 @@ public:
 
 	}
 
+	
 	void SetNet(MatrixXd *inputarrs, MatrixXd *expextarrs)
 	{
 		Inputarrs = *inputarrs;
 		Expextarrs = *expextarrs;
 		if (Inputarrs.cols() != BPInputLayer.NeutronsNum)
-			std::cerr << "���������޷�ƥ����������" << endl;
+			std::cerr << "输入数据无法匹配网络输入" << endl;
 		if (Expextarrs.cols() != BPOutputLayer.NeutronsNum)
-			std::cerr << "Ԥ�������޷�ƥ���������" << endl;
+			std::cerr << "预期数据无法匹配网络输出" << endl;
 		if (Inputarrs.rows() != Expextarrs.rows())
-			std::cerr << "����������Ԥ��������Ŀ����ͬ" << endl;
+			std::cerr << "输入数据与预期数据条目数不同" << endl;
 	}
 
-
+	//训练一次
 	void _Train()
 	{
 		int datarows = Inputarrs.rows() < Expextarrs.rows() ? Inputarrs.rows() : Expextarrs.rows();
@@ -80,6 +81,7 @@ public:
 		}
 	}
 
+	//获取误差
 	double GetError()
 	{
 		double error = 0, temp;
@@ -91,12 +93,14 @@ public:
 		return 0.5 * error;
 	}
 
+	//跳过几次
 	void Skip(int skiptimes)
 	{
 		for (int i = 0; i < skiptimes; ++i)
 			_Train();
 	}
 
+	//指定次数训练
 	void Train(int traintimes)
 	{
 		for (int i = 0; i < traintimes; ++i)
@@ -104,6 +108,7 @@ public:
 		cout << GetError() << endl;
 	}
 
+	//当误差小于预期 停止训练
 	void TrainWithError(double error)
 	{
 		int n = 0;
@@ -116,6 +121,7 @@ public:
 		cout << n << endl;
 	}
 
+	//测试
 	void Test()
 	{
 		int datarows = Inputarrs.rows() < Expextarrs.rows() ? Inputarrs.rows() : Expextarrs.rows();
@@ -133,6 +139,7 @@ public:
 		}
 	}
 
+	//销毁
 	void Destroy()
 	{
 		if (BPHidenLayers) { delete[] BPHidenLayers; BPHidenLayers = NULL; }
