@@ -1,3 +1,11 @@
+/*
+*用于链接不同层的Connector
+*Net通过控制Connector控制层间的正向传播 与 反向传播
+*每个Layer必须实现 Foward 和 BackForward
+*代码复用性差--无法解决Layer泛型化的同时其模板参数 function的泛型化
+*/
+
+
 #pragma once
 
 #include "functions.h"
@@ -6,10 +14,13 @@
 #include <iostream>
 using namespace std;
 
+
+//所有Connector的父类
 template <class LastLayerType, class NextLayerType>
 class Connector
 {};
 
+//链接 SigmodFunction类型的 全连接层和输出层
 template<>
 class Connector<FullConectedLayher<SigmodFunction>, OutputLayer<SigmodFunction>>
 {
@@ -52,6 +63,7 @@ public:
 	}
 };
 
+//链接 PReluFunction类型的 全连接层和输出层
 template<>
 class Connector<FullConectedLayher<PreluFunction>, OutputLayer<PreluFunction>>
 {
@@ -94,6 +106,8 @@ public:
 	}
 };
 
+
+//链接 SigmodFunction类型的 全连接层和全连接层
 template<>
 class Connector<FullConectedLayher<SigmodFunction>, FullConectedLayher<SigmodFunction>>
 {
@@ -138,6 +152,7 @@ public:
 	}
 };
 
+//链接 PReluFunction类型的 全连接层和输出层
 template<>
 class Connector<FullConectedLayher<PreluFunction>, FullConectedLayher<PreluFunction>>
 {
@@ -182,7 +197,7 @@ public:
 	}
 };
 
-
+//链接 LinerFunction类型的 全连接层和全连接层
 template<>
 class Connector<FullConectedLayher<LinerFunction>, FullConectedLayher<SigmodFunction>>
 {
@@ -226,6 +241,7 @@ public:
 	}
 };
 
+//链接 SigmodFunction类型的全连接层和PReluFunctino的全连接层
 template<>
 class Connector<FullConectedLayher<LinerFunction>, FullConectedLayher<PreluFunction>>
 {
