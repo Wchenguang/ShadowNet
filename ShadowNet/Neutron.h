@@ -3,9 +3,8 @@
 #include "NeutronBase.h"
 //#include <Eigen/Dense>
 
-////////////!!!!!cinnector Æ«ÌØ»¯
 
-//È«Á¬½Ó²ãÀàÉñ¾­Ôª
+//å…¨è¿æ¥å±‚ç±»ç¥ç»å…ƒ
 template <class FunctionType>
 class FullConectedNeutron : public UpdatableWNeutron<double, double, double*>
 {
@@ -14,12 +13,12 @@ private:
 public:
 	typedef FunctionType functiontype;
 
-	//Weight ÓÉÇ°Ö¸Ïòºó
-	double LearningRate;			//Ñ§Ï°ËÙÂÊ
-	double *RecievedFactor;			//´ÓÏÂÒ»²ã½ÓÊÕµÄ·´Ïò´«²¥Òò×Ó connector
-	double **NextThresold;			//ÏÂÒ»²ãµÄãĞÖµÖ¸Õë connector
+	//Weight ç”±å‰æŒ‡å‘å
+	double LearningRate;			//å­¦ä¹ é€Ÿç‡
+	double *RecievedFactor;			//ä»ä¸‹ä¸€å±‚æ¥æ”¶çš„åå‘ä¼ æ’­å› å­ connector
+	double **NextThresold;			//ä¸‹ä¸€å±‚çš„é˜ˆå€¼æŒ‡é’ˆ connector
 	int NextLayerNeutronNum;
-	double *NextWeight;				//ÏÂÒ»²ãËüÖ¸ÏòµÄËùÓĞÈ¨Öµ
+	double *NextWeight;				//ä¸‹ä¸€å±‚å®ƒæŒ‡å‘çš„æ‰€æœ‰æƒå€¼
 	bool isInputSet;
 
 
@@ -29,7 +28,7 @@ public:
 	~FullConectedNeutron() { if (NextWeight) delete [] NextWeight; }
 	void InitThresold(double thresold) { Thresold = thresold; }
 	void _Init(double learningrate, double *recievedfactor,	
-			double **nextthresold, int nextlayerneutronnum);		//Ã¿Ò»¸öconnectorĞèÒªµ÷ÓÃInit
+			double **nextthresold, int nextlayerneutronnum);		//æ¯ä¸€ä¸ªconnectoréœ€è¦è°ƒç”¨Init
 	void Update();
 	void SetInput(double input);
 	double GetBackForwardFactor();
@@ -37,7 +36,7 @@ public:
 	double *GetPThresold();
 };
 
-//Êä³ö²ãÉñ¾­Ôª
+//è¾“å‡ºå±‚ç¥ç»å…ƒ
 template <class FunctionType>
 class OutputNeutron : UnupdatableNWNeutron<double, double>
 {
@@ -60,12 +59,9 @@ public:
 };
 
 
-
-/***********************************************************************/
-/***********************************************************************/
-
 /****************************FullConectedNeutron**********************************/
 
+//å…¨è¿æ¥å±‚ç¥ç»å…ƒ
 template <class FunctionType>
 void FullConectedNeutron<FunctionType>::_Init(double learningrate, double *recievedfactor,
 	double **nextthresold, int nextlayerneutronnum)
@@ -77,9 +73,10 @@ void FullConectedNeutron<FunctionType>::_Init(double learningrate, double *recie
 	NextLayerNeutronNum = nextlayerneutronnum;
 	NextWeight = new double[nextlayerneutronnum];
 	for(int i = 0; i < nextlayerneutronnum; ++i)
-		NextWeight[i] = (2.0*(double)rand() / RAND_MAX) - 1;
+		NextWeight[i] = (2.0*(double)rand() / RAND_MAX) - 1;	//å…³é”®çš„éšæœºåˆå§‹åŒ–
 }
 
+//è·å–åå‘è¯¯å·®ä¼ æ’­å› å­
 template <class FunctionType>
 double FullConectedNeutron<FunctionType>::GetBackForwardFactor()
 {
@@ -90,6 +87,7 @@ double FullConectedNeutron<FunctionType>::GetBackForwardFactor()
 	return factor * d;	
 }
 
+//é€šè¿‡è¿”å›çš„ä¼ æ’­å› å­æ›´æ–°
 template <class FunctionType>
 void FullConectedNeutron<FunctionType>::Update()
 {
@@ -123,8 +121,9 @@ double *FullConectedNeutron<FunctionType>::GetPThresold()
 {
 	return &Thresold;
 }
-/*****************************************************************/
+/************************OutputNeutron*****************************************/
 
+//è¾“å‡ºå±‚ç¥ç»å…ƒ 
 template <class functiontype>
 double OutputNeutron<functiontype>::GetBackForwardFactor()
 {
