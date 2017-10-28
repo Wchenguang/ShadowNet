@@ -23,23 +23,29 @@ int main()
 		1,
 		1,
 		0;
-	//Sigmodfunction 多层BP神经网络
+	//Sigmodfunction 澶氬眰BP绁炵粡缃戠粶
 	MultiBPNet<SigmodFunction> *SN = new MultiBPNet<SigmodFunction>;
-	SN->Init(2, 2, 1, new int[2]{ 3,4 },0.77);
+	int *arr0 = new int[2]{ 3,4 };
+	SN->Init(2, 2, 1, arr0, 0.77);
 	SN->SetNet(&input, &output);
 	SN->TrainWithError(0.0001);
 	SN->Test();
-
+	
+	delete []arr0;
 	delete SN;
+	
 	getchar();
-	//Prelufunction 多层BP神经网络
+	//Prelufunction 澶氬眰BP绁炵粡缃戠粶
 	MultiBPNet<PreluFunction> PN;
-	PN.Init(2, 2, 1, new int[2]{ 3,4 }, 0.07);
+	int *arr1 = new int[2]{ 3,4 };
+	PN.Init(2, 2, 1, arr1, 0.07);
 	PN.SetNet(&input, &output);
 	//PN.Skip(100);
 	PN.TrainWithError(0.000001);
 	PN.Test();
 
+	delete []arr1;
+	delete PN;
 	getchar();
 
 	return 0;
