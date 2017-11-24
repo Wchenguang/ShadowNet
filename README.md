@@ -7,7 +7,7 @@
 ## 使用示例
 * 见 test.cpp
 <pre>
-//建立训练集
+	//建立训练集
 	MatrixXd input(4, 2);
 	input << 0, 0,
 		0, 1,
