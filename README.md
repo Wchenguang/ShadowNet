@@ -1,18 +1,12 @@
-#include "functions.h"
-#include "Neutron.h"
-#include "Layer.h"
-#include "connector.h"
-#include <iostream>
-#include <Eigen/Dense>
-#include "Net.h"
+# C++神经网络库
+<br/>
+## 环境依赖
+* Eigen<br/>
 
-//using namespace Eigen;
-using namespace std;
-
-
-int main()
-{
-	//建立训练集
+## 使用示例
+* 见 test.cpp
+<pre>
+//建立训练集
 	MatrixXd input(4, 2);
 	input << 0, 0,
 		0, 1,
@@ -35,23 +29,9 @@ int main()
 	SN->TrainWithError(0.0001);
 	//验证
 	SN->Test();
-	
 	delete []arr0;
 	delete SN;
-	
-	getchar();
-	//Prelufunction 多层BP神经网络
-	MultiBPNet<PreluFunction> PN;
-	int *arr1 = new int[2]{ 3,4 };
-	PN.Init(2, 2, 1, arr1, 0.07);
-	PN.SetNet(&input, &output);
-	//PN.Skip(100);
-	PN.TrainWithError(0.000001);
-	PN.Test();
+</pre>
 
-	delete []arr1;
-	delete PN;
-	getchar();
-
-	return 0;
-}
+## 实现简介
+* 该网络库目前实现了BP神经网络，利用泛型化与对象化的思想，分别实现了输入层以及全联接层，并在每层之间加入了connector用于管理层与层之间误差的传递以及权重的更新
